@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 class DataExtractor:
-    def __init__(self, base_url="https://github.com/chinmayea99/StudentPerformance/new/datasets/"):
+    def __init__(self, base_url="https://github.com/chinmayea99/StudentPerformance/datasets/"):
         self.base_url = base_url
         self.data_dir = Path("data/raw")
         self.data_dir.mkdir(parents=True, exist_ok=True)
