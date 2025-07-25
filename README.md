@@ -30,3 +30,26 @@ python src/processing/spark_processor.py
 
 ## 4. Validate data quality
 python src/analytics/data_validation.py
+
+# Step 3: Analytics Implementation 
+
+# 1. Run advanced analytics
+python src/analytics/advanced_analytics.py
+
+# 2. Train machine learning models
+python src/models/train_models.py
+
+# 3. Generate insights
+python src/analytics/generate_insights.py
+
+## Step 4: Dashboard Deployment 
+
+# 1. Launch dashboard
+python src/dashboard/app.py
+
+# 2. Configure Airflow DAGs
+cp dags/* /opt/airflow/dags/
+docker exec -it airflow airflow dags list
+
+# 3. Start scheduled workflows
+docker exec -it airflow airflow dags unpause student_analytics_pipeline
