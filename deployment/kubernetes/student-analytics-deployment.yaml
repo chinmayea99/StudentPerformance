@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-analytics-app
+  labels:
+    app: student-analytics
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: student-analytics
+  template:
+    metadata:
+      labels:
+        app: student-analytics
+    spec:
+      containers:
+      - name: analytics-app
+        image: student-analytics:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPARK_MASTER_URL
+          value: "spark://spark-master:7077"
+        - name: MONGODB_URI
+          value: "mongodb://mongodb:27017/student_analytics"
+        - name: KAFKA_BROKERS
+          value: "kafka:9092"
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        volumeMounts:
+        - name: data-volume
+          mountPath: /app/data
+        - name: config-volume
+          mountPath: /app/config
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: analytics-data-pvc
+      - name: config-volume
+        configMap:
+          name: analytics-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-analytics-service
+spec:
+  selector:
+    app: student-analytics
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
